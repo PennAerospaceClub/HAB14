@@ -43,7 +43,7 @@ void setup()
     Serial.println(err);
     return;
   }
-  timer.setInterval(1000, repeatMe);
+  timer.setInterval(10000, repeatMe);
 
 
 
