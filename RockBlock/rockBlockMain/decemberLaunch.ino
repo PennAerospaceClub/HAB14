@@ -12,7 +12,7 @@ SimpleTimer timer;
 SoftwareSerial nss(rxPin, txPin);
 IridiumSBD isbd(nss, sleepPin);
 
-uint8_t buffer[200];
+uint8_t buffer[270];
 
 
 SoftwareSerial inc(5, 6); //for incoming data (rx is pin 5, tx is pin 6)
@@ -70,7 +70,7 @@ void repeatMe() //would like to eventually implement the Message class
   Data = "";
 
   Serial.print("hello!");
-  char outBuffer[200]; //RockBlock works in terms of char buffers
+  char outBuffer[270]; //RockBlock works in terms of char buffers
 
 
   //interface with other teams
@@ -80,7 +80,7 @@ void repeatMe() //would like to eventually implement the Message class
     outBuffer[i] = messageToSend[i];
   }
 
-  uint8_t rxBuffer[200] = {0};
+  uint8_t rxBuffer[270] = {0};
   for (int i = 0; i < messageToSend.length(); i++) {
     rxBuffer[i] = outBuffer[i];
   }
