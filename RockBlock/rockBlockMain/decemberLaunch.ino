@@ -62,7 +62,7 @@ void repeatMe() //would like to eventually implement the Message class
 {
   while (inc.available())
   {
-    char character = mySerial.read(); // Receive a single character from the software serial port
+    char character = inc.read(); // Receive a single character from the software serial port
     Data.concat(character); // Add the received character to the receive buffer
 
   }
