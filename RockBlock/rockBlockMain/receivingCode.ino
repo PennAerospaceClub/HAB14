@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
-const int rx = 6;
-const int tx = 5;
+const int rx = 12;
+const int tx = 13;
 SoftwareSerial Softser(rx, tx);
 String readString;
 
@@ -11,8 +11,8 @@ void setup() {
   
   pinMode(rx, INPUT);
   pinMode(tx, OUTPUT);
-  Softser.begin(9600);
-  Serial.begin(9600);
+  Softser.begin(19200);
+  Serial.begin(19200);
 
 }
 
