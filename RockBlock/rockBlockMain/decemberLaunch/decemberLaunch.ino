@@ -1,4 +1,4 @@
-lll#include <IridiumSBD.h>
+#include <IridiumSBD.h>
 #include <SimpleTimer.h>
 #include <SoftwareSerial.h>
 
@@ -34,10 +34,14 @@ void setup()
 
   nss.begin(19200);
 
+
   isbd.attachConsole(Serial);
   isbd.attachDiags(Serial);
-  isbd.setPowerProfile(0);
+  isbd.setPowerProfile(0);   
+
+  
   isbd.begin();
+  
 
   //take a look at the code below for reference of checking signal quality
   int err = isbd.getSignalQuality(signalQuality);
@@ -47,6 +51,7 @@ void setup()
     Serial.println(err);
     return;
   }
+
   timer.setInterval(10000, repeatMe);
 
 //begin communication with other arduino
@@ -58,6 +63,7 @@ void setup()
 
 void repeatMe() //would like to eventually implement the Message class
 {
+   inc.listen();
   //receive data from other rockblock
   String messageToSend = "";
   while (inc.available()){
@@ -94,7 +100,7 @@ void repeatMe() //would like to eventually implement the Message class
   }
 
   bufferSize = sizeof(buffer);
-
+  nss.listen();
   isbd.sendReceiveSBDBinary(rxBuffer, messageToSend.length(), buffer, bufferSize);
 
   for (int i = 0; i < sizeof(buffer); ++i)
