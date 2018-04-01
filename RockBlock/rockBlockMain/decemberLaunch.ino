@@ -1,11 +1,11 @@
-#include <IridiumSBD.h>
+lll#include <IridiumSBD.h>
 #include <SimpleTimer.h>
 #include <SoftwareSerial.h>
 
 
 int rxPin = 10;
 int txPin = 11;
-int sleepPin = 5;
+int sleepPin = 3;
 SimpleTimer timer;
 
 
@@ -15,8 +15,8 @@ IridiumSBD isbd(nss, sleepPin);
 uint8_t buffer[270];
 
 
-SoftwareSerial inc(5, 6); //for incoming data (rx is pin 5, tx is pin 6)
-String Data = ""; //to store incoming data
+SoftwareSerial inc(12, 13); //for incoming data (rx is pin 5, tx is pin 6)
+String readString; //to store incoming data
 
 
 int messagesSent  = 0;
@@ -39,9 +39,6 @@ void setup()
   isbd.setPowerProfile(0);
   isbd.begin();
 
-  //begin communication with other arduino
-  inc.begin(9600);
-
   //take a look at the code below for reference of checking signal quality
   int err = isbd.getSignalQuality(signalQuality);
   if (err != 0)
@@ -52,7 +49,8 @@ void setup()
   }
   timer.setInterval(10000, repeatMe);
 
-
+//begin communication with other arduino
+  inc.begin(19200);
 
 }
 
@@ -60,23 +58,33 @@ void setup()
 
 void repeatMe() //would like to eventually implement the Message class
 {
-  while (inc.available())
-  {
-    char character = inc.read(); // Receive a single character from the software serial port
-    Data.concat(character); // Add the received character to the receive buffer
-
+  //receive data from other rockblock
+  String messageToSend = "";
+  while (inc.available()){
+    char c = (char) inc.read();  //gets one byte from serial buffer
+    if (c == ',') {
+      if (readString.length() >0) {
+        Serial.println(readString);
+        messageToSend = readString;//prints string to serial port out
+        //do stuff with the captured readString 
+        readString = ""; //clears variable for new input
+      }
+    }  
+    else {     
+      readString += c; //makes the string readString
+    }
   }
-  String messageToSend = Data; //Sample string to send, will update to
-  Data = "";
+  if (!inc.available()) {
+    Serial.println("no incoming data");
+  }
 
-  Serial.print("hello!");
+  Serial.println("Message to Send: " + messageToSend);
+  
   char outBuffer[270]; //RockBlock works in terms of char buffers
-
 
   //interface with other teams
   messagesSent += 1;
-  for (uint8_t i = 0; i < messageToSend.length(); i++) {
-
+  for (int i = 0; i < messageToSend.length(); i++) {
     outBuffer[i] = messageToSend[i];
   }
 
