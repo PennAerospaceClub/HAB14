@@ -37,11 +37,11 @@ void setup()
 
   isbd.attachConsole(Serial);
   isbd.attachDiags(Serial);
-  isbd.setPowerProfile(0);   
+  isbd.setPowerProfile(0);
 
-  
+
   isbd.begin();
-  
+
 
   //take a look at the code below for reference of checking signal quality
   int err = isbd.getSignalQuality(signalQuality);
@@ -54,7 +54,7 @@ void setup()
 
   timer.setInterval(10000, repeatMe);
 
-//begin communication with other arduino
+  //begin communication with other arduino
   inc.begin(19200);
 
 }
@@ -63,23 +63,25 @@ void setup()
 
 void repeatMe() //would like to eventually implement the Message class
 {
-   inc.listen();
+  inc.listen();
   //receive data from other rockblock
   String messageToSend = "";
-  while (inc.available()){
-    char c = (char) inc.read();  //gets one byte from serial buffer
-    Serial.print(c);
-    if (c == ';') {
-      if (readString.length() >0) {
-        messageToSend = readString;//prints string to serial port out
-        //do stuff with the captured readString 
-        readString = ""; //clears variable for new input
+  for (int i = 0; i < 3; i++) {
+    while (inc.available()) {
+      char c = (char) inc.read();  //gets one byte from serial buffer
+      Serial.print(c);
+      if (c == ';') {
+        if (readString.length() > 0) {
+          messageToSend += readString;//prints string to serial port out
+          //do stuff with the captured readString
+          readString = ""; //clears variable for new input
+        }
       }
-    }  
-    else { 
-         inc.listen();
-    
-      readString += c; //makes the string readString
+      else {
+        inc.listen();
+
+        readString += c; //makes the string readString
+      }
     }
   }
   if (!inc.available()) {
@@ -87,7 +89,7 @@ void repeatMe() //would like to eventually implement the Message class
   }
 
   Serial.println("Message to Send: " + messageToSend);
-  
+
   char outBuffer[270]; //RockBlock works in terms of char buffers
 
   //interface with other teams
