@@ -1,9 +1,11 @@
 #include <SoftwareSerial.h>
+#include <SimpleTimer.h>
 
 const int rx = 12;
 const int tx = 13;
 SoftwareSerial Softser(rx, tx);
 String readString;
+SimpleTimer timer;
 
 
 void setup() {
@@ -13,16 +15,27 @@ void setup() {
   pinMode(tx, OUTPUT);
   Softser.begin(19200);
   Serial.begin(19200);
+    timer.setInterval(0, repeatMe);
+
 
 }
 
-void loop() {
+
+void loop()
+{
+    timer.run();
+  
+
+}
+void repeatMe() //would like to eventually implement the Message class
+{
   // put your main code here, to run repeatedly:
 
   if (Softser.available()){
    // float uv = Softser.read();
     char c = Softser.read();  //gets one byte from serial buffer
-    if (c == ',') {
+    Serial.print(c);
+    if (c == ';') {
       if (readString.length() >0) {
         Serial.print(readString); //prints string to serial port out
         Serial.println(','); //prints delimiting ","
@@ -45,7 +58,6 @@ void loop() {
     Serial.println("Software Serial unavailable.");
   }*/
 
-  delay(1000);
 
 
 }
