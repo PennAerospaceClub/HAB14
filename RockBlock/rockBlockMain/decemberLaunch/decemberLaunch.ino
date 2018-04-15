@@ -68,15 +68,17 @@ void repeatMe() //would like to eventually implement the Message class
   String messageToSend = "";
   while (inc.available()){
     char c = (char) inc.read();  //gets one byte from serial buffer
-    if (c == ',') {
+    Serial.print(c);
+    if (c == ';') {
       if (readString.length() >0) {
-        Serial.println(readString);
         messageToSend = readString;//prints string to serial port out
         //do stuff with the captured readString 
         readString = ""; //clears variable for new input
       }
     }  
-    else {     
+    else { 
+         inc.listen();
+    
       readString += c; //makes the string readString
     }
   }
