@@ -66,28 +66,25 @@ void repeatMe() //would like to eventually implement the Message class
   inc.listen();
   //receive data from other rockblock
   String messageToSend = "";
-  for (int i = 0; i < 3; i++) {
-    while (inc.available()) {
-      char c = (char) inc.read();  //gets one byte from serial buffer
-      Serial.print(c);
-      if (c == ';') {
-        if (readString.length() > 0) {
-          messageToSend += readString;//prints string to serial port out
-          //do stuff with the captured readString
-          readString = ""; //clears variable for new input
-        }
+  while (inc.available()) {
+    char c = (char) inc.read();  //gets one byte from serial buffer
+    Serial.print(c);
+    if (c == ';') {
+      if (readString.length() > 0) {
+        messageToSend += readString;//prints string to serial port out
+        //do stuff with the captured readString
+        readString = ""; //clears variable for new input
       }
-      else {
-        inc.listen();
+    }
+    else {
+      inc.listen();
 
-        readString += c; //makes the string readString
-      }
+      readString += c; //makes the string readString
     }
   }
   if (!inc.available()) {
     Serial.println("no incoming data");
   }
-
   Serial.println("Message to Send: " + messageToSend);
 
   char outBuffer[270]; //RockBlock works in terms of char buffers
