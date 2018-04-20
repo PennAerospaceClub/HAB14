@@ -110,12 +110,12 @@ void repeatMe() //would like to eventually implement the Message class
   String downMessage = "";
   for (int i = 0; i < sizeof(buffer); ++i)
   {
-    downMessage +=(buffer[i]);
-   
-  }
+    downMessage += (buffer[i]);
 
-  if(downMessage.equals("cutBallon")){
-    Serial.println("cut"); 
+  }
+  Serial.println(downMessage);
+  if (downMessage.equals("cutBalloon")) {
+    Serial.println("cut");
   }
 
 }
