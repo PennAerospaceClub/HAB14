@@ -65,28 +65,18 @@ void repeatMe() //would like to eventually implement the Message class
 {
   inc.listen();
   //receive data from other rockblock
-  String messageToSend = "";
-  for (int i = 0; i < 3; i++) {
-    while (inc.available()) {
-      char c = (char) inc.read();  //gets one byte from serial buffer
-      Serial.print(c);
-      if (c == ';') {
-        if (readString.length() > 0) {
-          messageToSend += readString;//prints string to serial port out
-          //do stuff with the captured readString
-          readString = ""; //clears variable for new input
-        }
-      }
-      else {
-        inc.listen();
 
-        readString += c; //makes the string readString
-      }
-    }
+
+  while(inc.available()){
+    char a = (char) inc.read(); 
+    Serial.print(a);
+    inc.flush(); 
   }
-  if (!inc.available()) {
-    Serial.println("no incoming data");
-  }
+
+
+    
+  String messageToSend = "";
+
 
   Serial.println("Message to Send: " + messageToSend);
 
@@ -107,13 +97,17 @@ void repeatMe() //would like to eventually implement the Message class
   nss.listen();
   isbd.sendReceiveSBDBinary(rxBuffer, messageToSend.length(), buffer, bufferSize);
 
+  String downMessage = "";
   for (int i = 0; i < sizeof(buffer); ++i)
   {
-    Serial.write(buffer[i]);
-    // Serial.print("(");
-    // Serial.print(bufferIn[i], HEX);
-    // Serial.print(") in");
+    downMessage += (buffer[i]);
+   
   }
+
+  if(downMessage.equals("cutBallon")){
+    Serial.println("cut");
+  }
+  downMessage = ""; 
 
 }
 
