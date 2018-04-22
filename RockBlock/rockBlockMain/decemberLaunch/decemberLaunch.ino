@@ -7,7 +7,7 @@ int rxPin = 10;
 int txPin = 11;
 int sleepPin = 3;
 SimpleTimer timer;
-
+int ledpin = 8;
 
 SoftwareSerial nss(rxPin, txPin);
 IridiumSBD isbd(nss, sleepPin);
@@ -38,7 +38,7 @@ void setup()
   isbd.attachConsole(Serial);
   isbd.attachDiags(Serial);
   isbd.setPowerProfile(0);
-
+  pinMode (ledpin, OUTPUT);
 
   isbd.begin();
 
@@ -110,12 +110,14 @@ void repeatMe() //would like to eventually implement the Message class
   String downMessage = "";
   for (int i = 0; i < sizeof(buffer); ++i)
   {
-    downMessage += (buffer[i]);
+
+    downMessage += (char) (buffer[i]);
 
   }
   Serial.println(downMessage);
   if (downMessage.equals("cutBalloon")) {
-    Serial.println("cut");
+      digitalWrite(ledpin, HIGH);
+
   }
 
 }
