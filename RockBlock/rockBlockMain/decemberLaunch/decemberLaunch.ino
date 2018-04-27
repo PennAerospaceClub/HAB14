@@ -107,7 +107,7 @@ void repeatMe() //would like to eventually implement the Message class
 
   bufferSize = sizeof(buffer);
   nss.listen();
-  //isbd.sendReceiveSBDBinary(rxBuffer, messageToSend.length(), buffer, bufferSize);
+  isbd.sendReceiveSBDBinary(rxBuffer, messageToSend.length(), buffer, bufferSize);
 
   String downMessage = "";
   for (int i = 0; i < sizeof(buffer); ++i)
@@ -122,7 +122,7 @@ void repeatMe() //would like to eventually implement the Message class
     nichromeOn = true;
 
   }
-
+  inc.listen();
 }
 
 

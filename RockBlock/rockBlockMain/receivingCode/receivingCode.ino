@@ -15,7 +15,7 @@ void setup() {
   pinMode(tx, OUTPUT);
   Softser.begin(19200);
   Serial.begin(19200);
-    timer.setInterval(0, repeatMe);
+    timer.setInterval(10000, repeatMe);
 
 
 }
@@ -31,7 +31,7 @@ void repeatMe() //would like to eventually implement the Message class
 {
   // put your main code here, to run repeatedly:
 
-  if (Softser.available()){
+  while (Softser.available()){
    // float uv = Softser.read();
     char c = Softser.read();  //gets one byte from serial buffer
     Serial.print(c);
