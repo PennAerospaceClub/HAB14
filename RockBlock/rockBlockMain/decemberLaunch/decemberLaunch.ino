@@ -8,6 +8,7 @@ int txPin = 11;
 int sleepPin = 3;
 SimpleTimer timer;
 int ledpin = 8;
+boolean nichromeOn = false;
 
 SoftwareSerial nss(rxPin, txPin);
 IridiumSBD isbd(nss, sleepPin);
@@ -33,7 +34,6 @@ void setup()
   int signalQuality = -1;
 
   nss.begin(19200);
-
 
   isbd.attachConsole(Serial);
   isbd.attachDiags(Serial);
@@ -66,22 +66,24 @@ void repeatMe() //would like to eventually implement the Message class
   inc.listen();
   //receive data from other rockblock
   String messageToSend = "";
-  for (int i = 0; i < 3; i++) {
-    while (inc.available()) {
-      char c = (char) inc.read();  //gets one byte from serial buffer
-      Serial.print(c);
-      if (c == ';') {
-        if (readString.length() > 0) {
-          messageToSend += readString;//prints string to serial port out
-          //do stuff with the captured readString
-          readString = ""; //clears variable for new input
+  while (inc.available()) {
+    char c = (char) inc.read();  //gets one byte from serial buffer
+    Serial.print(c);
+    if (c == ';') {
+      if (readString.length() > 0) {
+        messageToSend += readString;//prints string to serial port out
+        if (nichromeOn) {
+          messageToSend += ",YES";
+        } else {
+          messageToSend += ",NO";
         }
+        //do stuff with the captured readString
+        readString = ""; //clears variable for new input
       }
-      else {
-        inc.listen();
-
-        readString += c; //makes the string readString
-      }
+    }
+    else {
+      inc.listen();
+      readString += c; //makes the string readString
     }
   }
   if (!inc.available()) {
@@ -105,7 +107,7 @@ void repeatMe() //would like to eventually implement the Message class
 
   bufferSize = sizeof(buffer);
   nss.listen();
-  isbd.sendReceiveSBDBinary(rxBuffer, messageToSend.length(), buffer, bufferSize);
+  //isbd.sendReceiveSBDBinary(rxBuffer, messageToSend.length(), buffer, bufferSize);
 
   String downMessage = "";
   for (int i = 0; i < sizeof(buffer); ++i)
@@ -116,7 +118,8 @@ void repeatMe() //would like to eventually implement the Message class
   }
   Serial.println(downMessage);
   if (downMessage.equals("cutBalloon")) {
-      digitalWrite(ledpin, HIGH);
+    digitalWrite(ledpin, HIGH);
+    nichromeOn = true;
 
   }
 
